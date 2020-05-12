@@ -51,11 +51,12 @@ def ExtractAllFilesInRom(rom, outdir="./"):
     import sys
     assert type(rom) == ndspy.rom.NintendoDSRom, "ExtractAllFilesInFolder: feed me folder only plz ^.^"
     counter = 0
+    parentDir = f"{outdir}{rom.name.decode('ascii')}/"
     for x in rom.sortedFileIds:
         name = NDSRom.filenames.filenameOf(x)
         if (name == None):
             name = f"{hex(x)[2:]}"
-        outPath = f"{outdir}{rom.name.decode('ascii')}/{name}"
+        outPath = f"{parentDir}{name}"
         sys.stdout.write("Extracting "+outPath+"... ")
 
         countPath = f"{outdir}"
@@ -73,6 +74,15 @@ def ExtractAllFilesInRom(rom, outdir="./"):
             outFile.write(NDSRom.files[x])
             counter += 1
         print(f"done")
+    
+    with open(f"{parentDir}ARM7.bin", "wb") as arm7OutBin:
+        arm7OutBin.write(NDSRom.arm7)
+        counter += 1
+    
+    with open(f"{parentDir}ARM9.bin", "wb") as arm9OutBin:
+        arm9OutBin.write(NDSRom.arm9)
+        counter +=1 
+
     return counter
 
 with open(pathToRom, "rb") as romFile:
