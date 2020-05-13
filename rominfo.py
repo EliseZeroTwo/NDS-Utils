@@ -1,4 +1,5 @@
 import ndspy.rom
+import ndspy.lz10
 import sys
 pathToRom = ""
 try:
@@ -41,13 +42,14 @@ crc16Table = [
 	0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040
 ]
 
+
 def CRC16(data):
     crc16 = 0xFFFF
     for i in data:
         crc16 = int(((crc16 >> 8) ^ crc16Table[(crc16 ^ i) & 0xFF]) & 0xFFFF)
     return crc16
 
-def ExtractAllFilesInRom(rom, outdir="./"):
+def ExtractAllFilesInRom(rom, decomp=True, outdir="./"):
     import sys
     assert type(rom) == ndspy.rom.NintendoDSRom, "ExtractAllFilesInFolder: feed me folder only plz ^.^"
     counter = 0
